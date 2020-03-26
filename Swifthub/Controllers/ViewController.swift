@@ -11,6 +11,47 @@ import UIKit
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, RepositoryServiceDelegate{
     
     
+    let tableView = UITableView(frame: .zero, style: .plain)
+    
+    var repositories: [RepositoryModel] = []
+    
+    var savedRepos: [RepositoryModel] = []
+    
+    var repositoryService = RepositoryService()
+    
+    //Array responsible for showing items on screen.
+    lazy var reposToShow = repositories
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupView()
+        
+    }
+    /**
+     Delegate responsible for updating the repositories array.
+     @param: repositories it receives a list of repositories.
+            
+     */
+    func didUpdateRepositories(repositories: [RepositoryModel]){
+        self.repositories = repositories
+        
+        // TODO: Fix view not updating.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+            
+            self.tableView.reloadData()
+            
+        })
+    }
+    
+    //-------------------Setup TableView----------------------------
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Called did selected row")
+        let repoDetail = RepoDetailsViewController(selectedRepo: reposToShow[indexPath.row])
+        navigationController?.pushViewController(repoDetail, animated: true)
+        
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return  reposToShow.count
     }
@@ -20,8 +61,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.textLabel?.text =  reposToShow[indexPath.row].name
         return cell
     }
+    //-------------------End of Setup TableView----------------------------
     
-    //Setting up segmented control.
+    //-------------------Setup SegmentedControl----------------------------
     let segmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Repositories - Cloud","Repositories - Saved"])
         sc.selectedSegmentIndex = 0
@@ -42,21 +84,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         tableView.reloadData()
     }
+    //-------------------End of Setup SegmentedControl----------------------------
     
-    let tableView = UITableView(frame: .zero, style: .plain)
     
-    var repositories: [RepositoryModel] = []
+    /**
+    Simple method to setup view.
+               
+    */
     
-    var savedRepos: [RepositoryModel] = []
-    
-    var repositoryService = RepositoryService()
-    
-    //Array responsible for showing items on screen.
-    lazy var reposToShow = repositories
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
+    func setupView(){
         repositoryService.delegate = self
         repositoryService.fetchRepositories()
         
@@ -76,15 +112,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         view.addSubview(stackView)
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .zero)
-        
     }
-    
-    func didUpdateRepositories(repositories: [RepositoryModel]){
-        self.repositories = repositories
-//        tableView.reloadData()
-    }
-    
-
 
 }
 

@@ -6,7 +6,7 @@
 //
 //  Brian Voong, among other things, creates tutorials for iOS development.
 //  I really enjoy his videos and I think that this bit of code helps A LOT with
-//  Autolayout, so I always use this in my personal projects.
+//  Autolayout, so I always use his content as reference in my personal projects.
 
 import UIKit
 
