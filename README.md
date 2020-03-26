@@ -1,5 +1,5 @@
 # swifthub
-App that fetches all public swift repos, showing the on screen. 
+App that fetches all public swift repos and show them on screen. 
 
 
 <h2> TODO: </h2>
